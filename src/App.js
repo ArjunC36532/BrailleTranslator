@@ -46,7 +46,9 @@ function App() {
   const uploadAudio = (audioBlob) => {
     const formData = new FormData();
     formData.append('audio', audioBlob, 'recording.webm');
+    
 
+    // fetch url
     fetch('https://braille-backend-code.onrender.com', {  // ← Change this to your actual URL
       method: 'POST',
       body: formData,
