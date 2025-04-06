@@ -47,7 +47,7 @@ function App() {
     const formData = new FormData();
     formData.append('audio', audioBlob, 'recording.webm');
 
-    fetch('https://your-backend-service.onrender.com/translate-voice', {  // ← Change this to your actual URL
+    fetch('https://braille-backend-code.onrender.com', {  // ← Change this to your actual URL
       method: 'POST',
       body: formData,
     })
