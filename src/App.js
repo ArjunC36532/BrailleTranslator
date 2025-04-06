@@ -8,7 +8,6 @@ function App() {
   const audioChunksRef = useRef([]);
   const greetingSpoken = useRef(false);
 
-
   const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
@@ -18,7 +17,6 @@ function App() {
     try {
       const utterance = new SpeechSynthesisUtterance("Recording Started.");
 
-      // Wait until speech finishes before starting recording
       utterance.onend = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/webm' });
@@ -38,7 +36,6 @@ function App() {
         setOutput('Recording Started.');
       };
 
-      // Speak before starting recording
       window.speechSynthesis.speak(utterance);
     } catch (error) {
       console.error('Error accessing microphone:', error);
@@ -49,8 +46,8 @@ function App() {
   const uploadAudio = (audioBlob) => {
     const formData = new FormData();
     formData.append('audio', audioBlob, 'recording.webm');
-  
-    fetch('/api/translate-voice', {
+
+    fetch('https://your-backend-service.onrender.com/translate-voice', {  // ← Change this to your actual URL
       method: 'POST',
       body: formData,
     })
@@ -63,19 +60,14 @@ function App() {
         setOutput('Error uploading audio');
       });
   };
-   });
-    };
-    
-  
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.code === "Space" && !mediaRecorderRef.current) {
-        if(!greetingSpoken.current){
+        if (!greetingSpoken.current) {
           speak("Hello! I am your AI translator. When you are ready, press the space key and speak. When you are done, press the space key again. To repeat, press the space key again.");
           greetingSpoken.current = true;
-        }
-        else{
+        } else {
           startRecording();
         }
       }
