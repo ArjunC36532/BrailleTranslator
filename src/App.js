@@ -49,8 +49,8 @@ function App() {
   const uploadAudio = (audioBlob) => {
     const formData = new FormData();
     formData.append('audio', audioBlob, 'recording.webm');
-
-    fetch('http://localhost:8080/translate-voice', {
+  
+    fetch('/api/translate-voice', {
       method: 'POST',
       body: formData,
     })
@@ -63,6 +63,10 @@ function App() {
         setOutput('Error uploading audio');
       });
   };
+   });
+    };
+    
+  
 
   useEffect(() => {
     const handleKeyDown = (event) => {
