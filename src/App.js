@@ -8,17 +8,16 @@ function App() {
   const audioChunksRef = useRef([]);
   const greetingSpoken = useRef(false);
 
-  const playAudio = (audioPath) => {
-    const audio = new Audio(audioPath);
-    audio.play();
-    return audio;
+  const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
   };
 
   const startRecording = useCallback(async () => {
     try {
-      const audio = playAudio("/audio/recording-started.mp3");
+      const utterance = new SpeechSynthesisUtterance("Recording Started.");
 
-      audio.onended = async () => {
+      utterance.onend = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/webm' });
 
@@ -36,6 +35,8 @@ function App() {
         mediaRecorderRef.current.start();
         setOutput('Recording Started.');
       };
+
+      window.speechSynthesis.speak(utterance);
     } catch (error) {
       console.error('Error accessing microphone:', error);
       setOutput('Error accessing microphone');
@@ -64,7 +65,7 @@ function App() {
     const handleKeyDown = (event) => {
       if (event.code === "Space" && !mediaRecorderRef.current) {
         if (!greetingSpoken.current) {
-          playAudio("/audio/greeting.mp3");
+          speak("Hello! I am your AI translator. When you are ready, press the space key and speak. When you are done, press the space key again. To repeat, press the space key again.");
           greetingSpoken.current = true;
         } else {
           startRecording();
@@ -76,7 +77,7 @@ function App() {
       if (event.code === 'Space' && mediaRecorderRef.current?.state === 'recording') {
         mediaRecorderRef.current.stop();
         setOutput('Recording Stopped');
-        playAudio("/audio/recording-stopped.mp3");
+        speak('Recording stopped.');
       }
     };
 
